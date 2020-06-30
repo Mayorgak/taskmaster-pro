@@ -1,5 +1,5 @@
-var tasks = {};
-
+var tasks;
+//
 var createTask = function(taskText, taskDate, taskList) {
   // create elements that make up a task item
   var taskLi = $("<li>").addClass("list-group-item");
@@ -86,26 +86,30 @@ $("#task-form-modal .btn-primary").click(function() {
 
 
 $(".list-group").on("click", "p", function() {
-  var text = $(this)
-    .text()
-    .trim();
-});
+  
+    var text = $(this).text().trim();
+    var textInput = $("<textarea>").addClass("form-control").val(text);
 
-var textInput = $("<textarea>").addClass("form-control").val(text);
+    $(this).replaceWith(textInput);
+  });
 
-$(this).replaceWith(textInput);
-// remove all tasks
-$("#remove-tasks").on("click", function() {
-  for (var key in tasks) {
-    tasks[key].length = 0;
-    $("#list-" + key).empty();
-  }
-  saveTasks();
-});
 
-textInput.trigger("focus");
 
-$(".list-group").on("blur", "textarea", function () {});
+  // remove all tasks
+  $("#remove-tasks").on("click", function () {
+    for (var key in tasks) {
+      tasks[key].length = 0;
+      $("#list-" + key).empty();
+
+      textInput.trigger("focus");
+    }
+    saveTasks();
+  });
+
+$(".list-group").on("blur", "textarea", function () {
+  // get the textarea's current value/text
+  var text = $(this).val().trim();
+  $(this).replaceWith(text);
 
 // get the textarea's current value/text
 var text = $(this)
@@ -123,10 +127,22 @@ var index = $(this)
   .closest(".list-group-item")
   .index();
 
-
   tasks[status][index].text = text;
   saveTasks();
-// load tasks for the first time
+
+  // recreate p element
+var taskP = $("<p>")
+  .addClass("m-1")
+  .text(text);
+
+// replace textarea with p element
+$(this).replaceWith(taskP);
+
+});
+
+
+
+// // load tasks for the first time
 loadTasks();
 
 
