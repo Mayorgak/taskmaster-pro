@@ -1,3 +1,14 @@
 ul.list-group {
   min-height: 130px;
 }
+
+.main-pos{
+  position: relative;
+}
+
+.div-pos{
+  position: absolute;
+  bottom: 0px;
+  left:0px;
+  width:100%;
+}
