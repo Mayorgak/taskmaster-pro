@@ -91,7 +91,31 @@ $(".list-group").on("click", "p", function() {
     var textInput = $("<textarea>").addClass("form-control").val(text);
 
     $(this).replaceWith(textInput);
+
   });
+
+  
+  $(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event) {
+    console.log("activate", this);
+  },
+  deactivate: function(event) {
+    console.log("deactivate", this);
+  },
+  over: function(event) {
+    console.log("over", event.target);
+  },
+  out: function(event) {
+    console.log("out", event.target);
+  },
+  update: function(event) {
+    console.log("update", this);
+  }
+
 
 
 
@@ -189,11 +213,12 @@ $(".list-group").on("click", "span", function() {
 
   // automatically focus on new element
   dateInput.trigger("focus");
-});
 
 
-// // load tasks for the first time
+
+  // // load tasks for the first time
 loadTasks();
 
+});
 
 
