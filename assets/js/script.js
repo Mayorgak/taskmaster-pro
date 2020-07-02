@@ -86,10 +86,42 @@ $(".card .list-group").sortable({
  out: function (event) {
    console.log("out", event.target);
  },
+
  update: function (event) {
-   console.log("update", this);
- },
+
+  var tempArr = [];
+
+  // loop over current set of children in sortable list
+  $(this).children().each(function() {
+  
+    // trim down list's ID to match object property
+var arrName = $(this)
+  .attr("id")
+  .replace("list-", "");
+
+// update array on tasks object and save
+tasks[arrName] = tempArr;
+
+saveTasks();
+    var text = $(this)
+    .find("p")
+    .text()
+    .trim();
+
+  var date = $(this)
+    .find("span")
+    .text()
+    .trim();
+
+  tempArr.push({
+    text: text,
+    date: date,
+  });
+  });
+}
 });
+
+
 // remove all tasks
 $("#remove-tasks").on("click", function () {
  for (var key in tasks) {
@@ -99,21 +131,30 @@ $("#remove-tasks").on("click", function () {
  }
  saveTasks();
 });
+
+
 // value of due date was changed
 $(".list-group").on("blur", "input[type='text']", function () {
  // get current text
+
  var date = $(this).val().trim();
  // get the parent ul's id attribute
+
  var status = $(this).closest(".list-group").attr("id").replace("list-", "");
+
  // get the task's position in the list of other li elements
  var index = $(this).closest(".list-group-item").index();
+
  // update task in array and re-save to localstorage
  tasks[status][index].date = date;
  saveTasks();
+
+
  // recreate span element with bootstrap classes
  var taskSpan = $("<span>")
    .addClass("badge badge-primary badge-pill")
    .text(date);
+
  // replace input with span element
  $(this).replaceWith(taskSpan);
 });
@@ -121,17 +162,23 @@ $(".list-group").on("blur", "textarea", function () {
  // get the textarea's current value/text
  var text = $(this).val().trim();
  $(this).replaceWith(text);
+
  // get the textarea's current value/text
  var text = $(this).val().trim();
+
  // get the parent ul's id attribute
  var status = $(this).closest(".list-group").attr("id").replace("list-", "");
+
  // get the task's position in the list of other li elements
 
 var index = $(this).closest(".list-group-item").index();
  tasks[status][index].text = text;
  saveTasks();
+
  // recreate p element
  var taskP = $("<p>").addClass("m-1").text(text);
+
+
  // replace textarea with p element
  $(this).replaceWith(taskP);
 });
@@ -150,6 +197,27 @@ $(".list-group").on("click", "span", function () {
  $(this).replaceWith(dateInput);
  // automatically focus on new element
  dateInput.trigger("focus");
+
+ $("#trash").droppable({
+
+   accept: ".card .list-group-item",
+   tolerance: "touch",
+
+   drop: function (event, ui) {
+   
+     console.log("drop");
+     ui.draggable.remove();
+     
+   },
+   over: function (event, ui) {
+     console.log("over");
+   },
+   out: function (event, ui) {
+     console.log("out");
+     
+   },
+  
+ });
 
  // // load tasks for the first time
  loadTasks();
