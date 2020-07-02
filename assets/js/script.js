@@ -167,7 +167,9 @@ $(".list-group").on("blur", "textarea", function () {
  var text = $(this).val().trim();
 
  // get the parent ul's id attribute
- var status = $(this).closest(".list-group").attr("id").replace("list-", "");
+ var status = $(this).closest(".list-group").attr("id"); // Get the ID, which is probably a number
+
+status = String(status).replace("list-", ""); 
 
  // get the task's position in the list of other li elements
 
@@ -184,44 +186,38 @@ var index = $(this).closest(".list-group-item").index();
 });
 // due date was clicked
 $(".list-group").on("click", "span", function () {
- // get current text
- var date = $(this).text().trim();
- // create new input element
+  // get current text
+  var date = $(this).text().trim();
+  // create new input element
 
- var dateInput = $("<input>")
-   .attr("type", "text")
-   .addClass("form-control")
-   .val(date);
+  var dateInput = $("<input>")
+    .attr("type", "text")
+    .addClass("form-control")
+    .val(date);
 
- // swap out elements
- $(this).replaceWith(dateInput);
- // automatically focus on new element
- dateInput.trigger("focus");
+  // swap out elements
+  $(this).replaceWith(dateInput);
+  // automatically focus on new element
+  dateInput.trigger("focus");
 
- $("#trash").droppable({
+  $("#trash").droppable({
+    accept: ".card .list-group-item",
+    tolerance: "touch",
 
-   accept: ".card .list-group-item",
-   tolerance: "touch",
-
-   drop: function (event, ui) {
-   
-     console.log("drop");
-     ui.draggable.remove();
-     
-   },
-   over: function (event, ui) {
-     console.log("over");
-   },
-   out: function (event, ui) {
-     console.log("out");
-     
-   },
-  
- });
-
+    drop: function (event, ui) {
+      console.log("drop");
+    },
+    over: function (event, ui) {
+      console.log("over");
+    },
+    out: function (event, ui) {
+      console.log("out");
+    },
+  });
+});
  // // load tasks for the first time
  loadTasks();
-});
+
 
 
 
