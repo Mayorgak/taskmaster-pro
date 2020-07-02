@@ -8,12 +8,15 @@ var createTask = function (taskText, taskDate, taskList) {
  
    .addClass("badge badge-primary badge-pill")
    .text(taskDate);
+
  var taskP = $("<p>").addClass("m-1").text(taskText);
  // append span and p element to parent li
+
  taskLi.append(taskSpan, taskP);
  // append to ul list on the page
  $("#list-" + taskList).append(taskLi);
 };
+
 var loadTasks = function () {
  tasks = JSON.parse(localStorage.getItem("tasks"));
  // if nothing in localStorage, create a new object to track all task status arrays
@@ -51,6 +54,7 @@ $("#task-form-modal").on("shown.bs.modal", function () {
 $("#task-form-modal .btn-primary").click(function () {
  // get form values
  var taskText = $("#modalTaskDescription").val();
+
  var taskDate = $("#modalDueDate").val();
  if (taskText && taskDate) {
    createTask(taskText, taskDate, "toDo");
@@ -64,63 +68,58 @@ $("#task-form-modal .btn-primary").click(function () {
    saveTasks();
  }
 });
+
 $(".list-group").on("click", "p", function () {
  var text = $(this).text().trim();
  var textInput = $("<textarea>").addClass("form-control").val(text);
  $(this).replaceWith(textInput);
 });
+
 $(".card .list-group").sortable({
- connectWith: $(".card .list-group"),
- scroll: false,
- tolerance: "pointer",
- helper: "clone",
- activate: function (event) {
-   console.log("activate", this);
- },
- deactivate: function (event) {
-   console.log("deactivate", this);
- },
- over: function (event) {
-   console.log("over", event.target);
- },
- out: function (event) {
-   console.log("out", event.target);
- },
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
 
- update: function (event) {
+  activate: function (event) {
+    console.log("activate", this);
+  },
 
-  var tempArr = [];
+  deactivate: function (event) {
+    console.log("deactivate", this);
+  },
+  over: function (event) {
+    console.log("over", event.target);
+  },
+  out: function (event) {
+    console.log("out", event.target);
+  },
 
-  // loop over current set of children in sortable list
-  $(this).children().each(function() {
-  
-    // trim down list's ID to match object property
-var arrName = $(this)
-  .attr("id")
-  .replace("list-", "");
+  update: function (event) {
+    var tempArr = [];
 
-// update array on tasks object and save
-tasks[arrName] = tempArr;
+    // loop over current set of children in sortable list
+    $(this)
+      .children()
+      .each(function () {
+        // trim down list's ID to match object property
+        var text = $(this).find("p").text().trim();
 
-saveTasks();
-    var text = $(this)
-    .find("p")
-    .text()
-    .trim();
+        var date = $(this).find("span").text().trim();
 
-  var date = $(this)
-    .find("span")
-    .text()
-    .trim();
+        tempArr.push({
+          text: text,
+          date: date,
+        });
+      });
+    var arrName = $(this).attr("id").replace("list-", "");
 
-  tempArr.push({
-    text: text,
-    date: date,
-  });
-  });
-}
+    // update array on tasks object and save
+    tasks[arrName] = tempArr;
+
+    saveTasks();
+  },
 });
-
 
 // remove all tasks
 $("#remove-tasks").on("click", function () {
@@ -129,7 +128,6 @@ $("#remove-tasks").on("click", function () {
    $("#list-" + key).empty();
    textInput.trigger("focus");
  }
- saveTasks();
 });
 
 
