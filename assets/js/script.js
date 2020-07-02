@@ -198,21 +198,18 @@ $(".list-group").on("click", "span", function () {
   // automatically focus on new element
   dateInput.trigger("focus");
 
-  $("#trash").droppable({
-    accept: ".card .list-group-item",
-    tolerance: "touch",
-
-    drop: function (event, ui) {
-      console.log("drop");
-    },
-    over: function (event, ui) {
-      console.log("over");
-    },
-    out: function (event, ui) {
-      console.log("out");
-    },
-  });
 });
+
+ $("#trash").droppable({
+   accept: ".card .list-group-item",
+   tolerance: "touch",
+
+   drop: function (event, ui) {
+     // remove dragged element from the dom
+     ui.draggable.remove();
+     $(".bottom-trash").removeClass("bottom-trash-active");
+   },
+ });
  // // load tasks for the first time
  loadTasks();
 
