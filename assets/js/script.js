@@ -1,20 +1,44 @@
 var tasks;
 //
 var createTask = function (taskText, taskDate, taskList) {
- // create elements that make up a task item
- var taskLi = $("<li>").addClass("list-group-item");
+  // create elements that make up a task item
+  var taskLi = $("<li>").addClass("list-group-item");
 
- var taskSpan = $("<span>")
+  var taskSpan = $("<span>")
+    .addClass("badge badge-primary badge-pill")
+    .text(taskDate);
+
+  var taskP = $("<p>").addClass("m-1").text(taskText);
+
+  // append span and p element to parent li
+  taskLi.append(taskSpan, taskP);
+
+
+  // check due date
+
+  var auditTask = function (taskEl) {
+    // get date from task element
+    var date = $(taskEl).find("span").text().trim();
+    // ensure it worked
+    console.log(date);
+
+    // convert to moment object at 5:00pm
+    var time = moment(date, "L").set("hour", 17);
+    // this should print out an object for the value of the date variable, but at 5:00pm of that date
+    console.log(time);
+
+    // apply new class if task is near/over due date
+  if (moment().isAfter(time)) {
+    $(taskEl).addClass("list-group-item-danger");
+  } 
+  else if (Math.abs(moment().diff(time, "days")) <= 2) {
+    $(taskEl).addClass("list-group-item-warning");
+
+     // append to ul list on the page
+  $("#list-" + taskList).append(taskLi);
+  }
+  };
  
-   .addClass("badge badge-primary badge-pill")
-   .text(taskDate);
-
- var taskP = $("<p>").addClass("m-1").text(taskText);
- // append span and p element to parent li
-
- taskLi.append(taskSpan, taskP);
- // append to ul list on the page
- $("#list-" + taskList).append(taskLi);
 };
 
 var loadTasks = function () {
@@ -217,6 +241,13 @@ $(".list-group").on("click", "span", function () {
      $(".bottom-trash").removeClass("bottom-trash-active");
    },
  });
+
+  
+  var auditTask = function (taskEl) {
+    // to ensure element is getting to the function
+    console.log(taskEl);
+  };
+
 
 
  // // load tasks for the first time
