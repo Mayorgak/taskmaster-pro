@@ -1,45 +1,59 @@
 var tasks;
 //
-var createTask = function (taskText, taskDate, taskList) {
+var createTask = function(taskText, taskDate, taskList) {
   // create elements that make up a task item
   var taskLi = $("<li>").addClass("list-group-item");
 
-  var taskSpan = $("<span>")
-    .addClass("badge badge-primary badge-pill")
-    .text(taskDate);
+  var taskSpan = $("<span>").addClass("badge badge-primary badge-pill").text(taskDate);
 
   var taskP = $("<p>").addClass("m-1").text(taskText);
 
   // append span and p element to parent li
   taskLi.append(taskSpan, taskP);
 
+  // check due date
+  auditTask(taskLi);
+
+  // append to ul list on the page
+  $("#list-" + taskList).append(taskLi);
+};
+
+
 
   // check due date
 
   var auditTask = function (taskEl) {
+   
     // get date from task element
     var date = $(taskEl).find("span").text().trim();
     // ensure it worked
     console.log(date);
+
+    console.log("made it here");
 
     // convert to moment object at 5:00pm
     var time = moment(date, "L").set("hour", 17);
     // this should print out an object for the value of the date variable, but at 5:00pm of that date
     console.log(time);
 
-    // apply new class if task is near/over due date
+    // remove any old classes from element
+  $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
+
+   // apply new class if task is near/over due date
   if (moment().isAfter(time)) {
     $(taskEl).addClass("list-group-item-danger");
+
   } 
   else if (Math.abs(moment().diff(time, "days")) <= 2) {
     $(taskEl).addClass("list-group-item-warning");
 
-     // append to ul list on the page
-  $("#list-" + taskList).append(taskLi);
+    
   }
   };
- 
-};
+
+
+
+auditTask();
 
 var loadTasks = function () {
  tasks = JSON.parse(localStorage.getItem("tasks"));
@@ -96,7 +110,7 @@ $("#task-form-modal .btn-primary").click(function () {
 });
 
 $("#modalDueDate").datepicker({
-   minDate: 1
+  //  minDate: 1
 });
 
 $(".list-group").on("click", "p", function () {
@@ -185,6 +199,9 @@ $(".list-group").on("blur", "input[type='text']", function () {
 
  // replace input with span element
  $(this).replaceWith(taskSpan);
+
+
+
 });
 $(".list-group").on("blur", "textarea", function () {
  // get the textarea's current value/text
@@ -243,10 +260,7 @@ $(".list-group").on("click", "span", function () {
  });
 
   
-  var auditTask = function (taskEl) {
-    // to ensure element is getting to the function
-    console.log(taskEl);
-  };
+
 
 
 
