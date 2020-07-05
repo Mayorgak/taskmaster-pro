@@ -29,7 +29,7 @@ var createTask = function(taskText, taskDate, taskList) {
     // ensure it worked
     console.log(date);
 
-    console.log("made it here");
+    console.log(taskEl);
 
     // convert to moment object at 5:00pm
     var time = moment(date, "L").set("hour", 17);
@@ -89,7 +89,7 @@ $("#task-form-modal").on("shown.bs.modal", function () {
  $("#modalTaskDescription").trigger("focus");
 });
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function () {
+$("#task-form-modal .btn-save").click(function () {
  // get form values
  var taskText = $("#modalTaskDescription").val();
 
@@ -113,9 +113,11 @@ $("#modalDueDate").datepicker({
   //  minDate: 1
 });
 
+var textInput;
+
 $(".list-group").on("click", "p", function () {
  var text = $(this).text().trim();
- var textInput = $("<textarea>").addClass("form-control").val(text);
+  textInput = $("<textarea>").addClass("form-control").val(text);
  $(this).replaceWith(textInput);
 });
 
@@ -126,16 +128,25 @@ $(".card .list-group").sortable({
   helper: "clone",
 
   activate: function (event) {
+    $(this).addClass("dropover");
+    $(".botom-trash").addClass("bottom-trash-drag");
+ 
     console.log("activate", this);
   },
 
   deactivate: function (event) {
+     $(this).removeClass("dropover");
+    $(".botom-trash").removeClass("bottom-trash-drag");
     console.log("deactivate", this);
   },
   over: function (event) {
+    $(event.target).addClass("dropover-active");
+    $(".botom-trash").addClass("bottom-trash-active");
     console.log("over", event.target);
   },
   out: function (event) {
+    $(event.target).removeClass("dropover-active");
+     $(".botom-trash").removeClass("bottom-trash-active");
     console.log("out", event.target);
   },
 
@@ -207,6 +218,7 @@ $(".list-group").on("blur", "textarea", function () {
  // get the textarea's current value/text
  var text = $(this).val().trim();
  $(this).replaceWith(text);
+ textInput.trigger("focus");
 
  // get the textarea's current value/text
  var text = $(this).val().trim();
@@ -261,7 +273,9 @@ $(".list-group").on("click", "span", function () {
 
   
 
-
+setInterval(function () {
+  // code to execute
+}, 1000 * 60 * 30);
 
 
  // // load tasks for the first time
